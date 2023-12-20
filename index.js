@@ -1,8 +1,12 @@
 const inquirer = require("inquirer");
+
 const shapeLib = require("./lib/shapes.js");
 const Circle = shapeLib.Circle;
 const Triangle = shapeLib.Triangle;
 const Square = shapeLib.Square;
+
+const textLib = require("./lib/text.js");
+const Text = textLib.Text;
 
 const DEBUG = true;
 
@@ -17,20 +21,20 @@ const questions = [
         type: "input",
         name: "shapeColor",
         message: "Please enter the desired shape color (keyword or hexcode):",
-        // validate?
-    }/*,
+        // validate: hexcode or keyword
+    },
     {
         type: "input",
         name: "textContent",
         message: "Please enter up to three characters to display on the logo:",
-        // validate?
+        // validate: three characters or less
     }, 
     {
         type: "input",
         name: "textColor",
         message: "Please enter the desired text color (keyword or hexcode):",
-        // validate?
-    }*/
+        // validate: hexcode or keyword
+    }
 ]
 
 function init() {
@@ -60,7 +64,12 @@ function init() {
                 console.log(shape.render());
             }
 
-            // build text
+            let text = new Text(answers.textContent);
+            text.setColor(answers.textColor);
+
+            if (DEBUG) {
+                console.log(text.render());
+            }
 
             // write to file
             //console.log("Generated logo.svg");
