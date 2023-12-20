@@ -1,48 +1,75 @@
 const inquirer = require("inquirer");
+const shapeLib = require("./lib/shapes.js");
+const Circle = shapeLib.Circle;
+const Triangle = shapeLib.Triangle;
+const Square = shapeLib.Square;
 
-const DEBUG = false;
+const DEBUG = true;
 
 const questions = [
     {
-        type: "input",
-        name: "text_content",
-        message: "Please enter up to three characters to display on the logo:",
-        // validate?
-    }, 
-    {
-        type: "input",
-        name: "text_color",
-        message: "Please enter the desired text color (keyword or hexcode):",
-        // validate?
-    }, 
-    {
         type: "list",
-        name: "shape_option",
+        name: "shapeOption",
         message: "Please enter the logo shape from the following:",
         choices: ["Circle", "Triangle", "Square"]
     }, 
     {
         type: "input",
-        name: "shape_color",
+        name: "shapeColor",
         message: "Please enter the desired shape color (keyword or hexcode):",
         // validate?
-    }
+    }/*,
+    {
+        type: "input",
+        name: "textContent",
+        message: "Please enter up to three characters to display on the logo:",
+        // validate?
+    }, 
+    {
+        type: "input",
+        name: "textColor",
+        message: "Please enter the desired text color (keyword or hexcode):",
+        // validate?
+    }*/
 ]
 
 function init() {
     // inquirer prompts for shape properties
     inquirer.prompt(questions)
         .then((answers) => {
-            console.log(answers);
+            if (DEBUG) {
+                console.log(answers);
+            }
+            let shape;
+            switch (answers.shapeOption) {
+                case "Circle":
+                    shape = new Circle();
+                    break;
+                case "Triangle":
+                    shape = new Triangle();
+                    break;
+                case "Square":
+                    shape = new Square();
+                    break;
+                default: // Is never reached as shape_option is generated from set list
+                    break;
+            }
+            shape.setColor(answers.shapeColor);
+
+            if (DEBUG) {
+                console.log(shape.render());
+            }
+
+            // build text
+
+            // write to file
             //console.log("Generated logo.svg");
         })
-
-    // build shape
 }
 
 init();
 
-if (DEBUG) {
+if (false) {
     inquirer
         .prompt([
             {
