@@ -1,48 +1,91 @@
 const inquirer = require("inquirer");
+const fs = require('fs');
 
-const DEBUG = false;
+const shapeLib = require("./lib/shapes.js");
+const Circle = shapeLib.Circle;
+const Triangle = shapeLib.Triangle;
+const Square = shapeLib.Square;
 
-const questions = [
-    {
-        type: "input",
-        name: "text_content",
-        message: "Please enter up to three characters to display on the logo:",
-        // validate?
-    }, 
-    {
-        type: "input",
-        name: "text_color",
-        message: "Please enter the desired text color (keyword or hexcode):",
-        // validate?
-    }, 
+const textLib = require("./lib/text.js");
+const Text = textLib.Text;
+
+const DEBUG = true;
+
+const QUESTIONS = [
     {
         type: "list",
-        name: "shape_option",
+        name: "shapeOption",
         message: "Please enter the logo shape from the following:",
         choices: ["Circle", "Triangle", "Square"]
     }, 
     {
         type: "input",
-        name: "shape_color",
+        name: "shapeColor",
         message: "Please enter the desired shape color (keyword or hexcode):",
-        // validate?
+        // validate: hexcode or keyword
+    },
+    {
+        type: "input",
+        name: "textContent",
+        message: "Please enter up to three characters to display on the logo:",
+        // validate: three characters or less
+    }, 
+    {
+        type: "input",
+        name: "textColor",
+        message: "Please enter the desired text color (keyword or hexcode):",
+        // validate: hexcode or keyword
     }
 ]
 
+const SVG_WIDTH = 300;
+const SVG_HEIGHT = 200;
+const SVG_HEADER = `<svg version="1.1" width="${SVG_WIDTH}" height="${SVG_HEIGHT}" xmlns="http://www.w3.org/2000/svg">`
+const SVG_FOOTER = `</svg>`;
+
 function init() {
     // inquirer prompts for shape properties
-    inquirer.prompt(questions)
+    inquirer.prompt(QUESTIONS)
         .then((answers) => {
-            console.log(answers);
-            //console.log("Generated logo.svg");
-        })
+            if (DEBUG) {
+                console.log(answers);
+            }
+            let shape;
+            switch (answers.shapeOption) {
+                case "Circle":
+                    shape = new Circle();
+                    break;
+                case "Triangle":
+                    shape = new Triangle();
+                    break;
+                case "Square":
+                    shape = new Square();
+                    break;
+                default: // Is never reached as shape_option is generated from set list
+                    break;
+            }
+            shape.setColor(answers.shapeColor);
 
-    // build shape
+            if (DEBUG) {
+                console.log(shape.render());
+            }
+
+            let text = new Text(answers.textContent);
+            text.setColor(answers.textColor);
+
+            if (DEBUG) {
+                console.log(text.render());
+            }
+
+            const svgContents = `${SVG_HEADER}\n\n  ${shape.render()}\n\n  ${text.render()}\n\n${SVG_FOOTER}`;
+            fs.writeFile("logo.svg", svgContents, () => {});
+            console.log("Generated logo.svg");
+        })
 }
 
 init();
 
-if (DEBUG) {
+if (false) {
     inquirer
         .prompt([
             {
