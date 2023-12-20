@@ -1,4 +1,5 @@
 const inquirer = require("inquirer");
+const fs = require('fs');
 
 const shapeLib = require("./lib/shapes.js");
 const Circle = shapeLib.Circle;
@@ -10,7 +11,7 @@ const Text = textLib.Text;
 
 const DEBUG = true;
 
-const questions = [
+const QUESTIONS = [
     {
         type: "list",
         name: "shapeOption",
@@ -37,9 +38,14 @@ const questions = [
     }
 ]
 
+const SVG_WIDTH = 300;
+const SVG_HEIGHT = 200;
+const SVG_HEADER = `<svg version="1.1" width="${SVG_WIDTH}" height="${SVG_HEIGHT}" xmlns="http://www.w3.org/2000/svg">`
+const SVG_FOOTER = `</svg>`;
+
 function init() {
     // inquirer prompts for shape properties
-    inquirer.prompt(questions)
+    inquirer.prompt(QUESTIONS)
         .then((answers) => {
             if (DEBUG) {
                 console.log(answers);
@@ -71,8 +77,9 @@ function init() {
                 console.log(text.render());
             }
 
-            // write to file
-            //console.log("Generated logo.svg");
+            const svgContents = `${SVG_HEADER}\n\n  ${shape.render()}\n\n  ${text.render()}\n\n${SVG_FOOTER}`;
+            fs.writeFile("logo.svg", svgContents, () => {});
+            console.log("Generated logo.svg");
         })
 }
 
