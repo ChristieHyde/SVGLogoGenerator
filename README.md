@@ -9,7 +9,7 @@ Installation instructions are as follows:
 - In the user's preferred command line application, run `npm install` or `npm i` inside the project folder.
 
 ## Usage
-Demonstration video is provided at the following URL: //
+Demonstration video is provided at the following URL: https://watch.screencastify.com/v/6RnHWHF1wCWoyVPlHy6a
 Users can run the project through Node on their preferred command line. The `node index.js` command will start the program.
 
 Once the program is running, a series of questions will be displayed on the command line. Users can type their responses to these questions to have them saved into the program. The questions will determine the logo's background shape and colour, as well as a text input of up to three characters, as well as its colour. Colours are validated as CSS keywords or hexcodes.
